@@ -57,6 +57,10 @@ while (class(mart)[[1]] != "Mart") {
     }
   )
 }
+attributes = listAttributes(mart)
+attributes[1:5,]
+mart
+
 
 three_prime_activated <- snakemake@params[["three_prime_activated"]]
 
@@ -89,8 +93,14 @@ wanted_attributes <- c(
 )
 
 
+# three_prime_attributes <- c(
+#   "ensembl_transcript_id_version",
+#   "chromosome_name",
+#   "transcript_length",
+#   "strand"
+# )
+
 three_prime_attributes <- c(
-  "ensembl_transcript_id_version",
   "chromosome_name",
   "transcript_length",
   "strand"
@@ -112,6 +122,13 @@ if (three_prime_activated &
     )
   )
 }
+
+# if (three_prime_activated){
+#   wanted_attributes <- c(
+#     wanted_attributes,
+#     three_prime_attributes
+#   )
+# }
 
 wanted_attributes <- c(
   wanted_attributes,
@@ -172,7 +189,6 @@ other_annotations <- all_annotations |>
   # for non-3-prime kallisto-sleuth input
   filter(!str_detect(chromosome_name, "patch|PATCH")) |>
   select(-c(chromosome_name, sleuth_attributes)) |>
-  rename(transcript = ensembl_transcript_id_version) |>
   mutate(
     strand = case_match(
         strand,
